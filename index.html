@@ -266,6 +266,8 @@
     .rx-planet{width:70px;flex:0 0 70px;font-size:12.5px}
     .rx-dates{width:84px;flex:0 0 84px;font-size:10px}
   }
+  .pl-sm svg{width:12px;height:12px;vertical-align:-2px;margin-right:4px}
+  .pl-lg svg{width:28px;height:28px}
   .ev-time{font-family:"Inter",system-ui,sans-serif;font-size:11.5px;letter-spacing:.06em;color:var(--dim);margin:2px 0 6px}
 </style>
 </head>
@@ -337,6 +339,7 @@ const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct
 
 // ─── ASTRONOMICAL DATA 2027 (Skyfield + JPL DE421, times in UTC) ─────────────────────────────────────────────────
 
+const PLANETS = {"Sun": "<svg class=\"planet\" viewBox=\"0 0 24 24\" aria-label=\"Sun\"><defs><radialGradient id=\"pg-sun\" cx=\"35%\" cy=\"32%\" r=\"70%\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".9\"/><stop offset=\".25\" stop-color=\"#FFE48A\"/><stop offset=\"1\" stop-color=\"#E8961E\"/></radialGradient></defs><line x1=\"20.6\" y1=\"12.0\" x2=\"22.8\" y2=\"12.0\" stroke=\"#E8961E\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><line x1=\"18.1\" y1=\"18.1\" x2=\"19.6\" y2=\"19.6\" stroke=\"#E8961E\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><line x1=\"12.0\" y1=\"20.6\" x2=\"12.0\" y2=\"22.8\" stroke=\"#E8961E\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><line x1=\"5.9\" y1=\"18.1\" x2=\"4.4\" y2=\"19.6\" stroke=\"#E8961E\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><line x1=\"3.4\" y1=\"12.0\" x2=\"1.2\" y2=\"12.0\" stroke=\"#E8961E\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><line x1=\"5.9\" y1=\"5.9\" x2=\"4.4\" y2=\"4.4\" stroke=\"#E8961E\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><line x1=\"12.0\" y1=\"3.4\" x2=\"12.0\" y2=\"1.2\" stroke=\"#E8961E\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><line x1=\"18.1\" y1=\"5.9\" x2=\"19.6\" y2=\"4.4\" stroke=\"#E8961E\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"7\" fill=\"url(#pg-sun)\"/></svg>", "Mercury": "<svg class=\"planet\" viewBox=\"0 0 24 24\" aria-label=\"Mercury\"><defs><radialGradient id=\"pg-mercury\" cx=\"35%\" cy=\"32%\" r=\"70%\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".9\"/><stop offset=\".25\" stop-color=\"#E3D6C6\"/><stop offset=\"1\" stop-color=\"#8F7B6A\"/></radialGradient></defs><circle cx=\"12\" cy=\"12\" r=\"7\" fill=\"url(#pg-mercury)\"/></svg>", "Venus": "<svg class=\"planet\" viewBox=\"0 0 24 24\" aria-label=\"Venus\"><defs><radialGradient id=\"pg-venus\" cx=\"35%\" cy=\"32%\" r=\"70%\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".9\"/><stop offset=\".25\" stop-color=\"#FBE0DA\"/><stop offset=\"1\" stop-color=\"#D98BA6\"/></radialGradient></defs><circle cx=\"12\" cy=\"12\" r=\"7\" fill=\"url(#pg-venus)\"/></svg>", "Mars": "<svg class=\"planet\" viewBox=\"0 0 24 24\" aria-label=\"Mars\"><defs><radialGradient id=\"pg-mars\" cx=\"35%\" cy=\"32%\" r=\"70%\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".9\"/><stop offset=\".25\" stop-color=\"#F6A07E\"/><stop offset=\"1\" stop-color=\"#B5371F\"/></radialGradient></defs><circle cx=\"12\" cy=\"12\" r=\"7\" fill=\"url(#pg-mars)\"/></svg>", "Jupiter": "<svg class=\"planet\" viewBox=\"0 0 24 24\" aria-label=\"Jupiter\"><defs><radialGradient id=\"pg-jupiter\" cx=\"35%\" cy=\"32%\" r=\"70%\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".9\"/><stop offset=\".25\" stop-color=\"#F6DDB0\"/><stop offset=\"1\" stop-color=\"#C98B52\"/></radialGradient></defs><circle cx=\"12\" cy=\"12\" r=\"7\" fill=\"url(#pg-jupiter)\"/><path d=\"M5.6 10.2h12.8M5.2 13.4h13.6\" stroke=\"#C98B52\" stroke-width=\"1\" opacity=\".55\"/></svg>", "Saturn": "<svg class=\"planet\" viewBox=\"0 0 24 24\" aria-label=\"Saturn\"><defs><radialGradient id=\"pg-saturn\" cx=\"35%\" cy=\"32%\" r=\"70%\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".9\"/><stop offset=\".25\" stop-color=\"#F1E4B8\"/><stop offset=\"1\" stop-color=\"#B99A55\"/></radialGradient></defs><g transform=\"rotate(-20 12 12)\"><ellipse cx=\"12\" cy=\"12\" rx=\"11.2\" ry=\"3.4\" fill=\"none\" stroke=\"#B99A55\" stroke-width=\"1.3\"/></g><circle cx=\"12\" cy=\"12\" r=\"6.2\" fill=\"url(#pg-saturn)\"/><g transform=\"rotate(-20 12 12)\"><path d=\"M0.8 12 A11.2 3.4 0 0 0 23.2 12\" fill=\"none\" stroke=\"#B99A55\" stroke-width=\"1.3\"/></g></svg>", "Uranus": "<svg class=\"planet\" viewBox=\"0 0 24 24\" aria-label=\"Uranus\"><defs><radialGradient id=\"pg-uranus\" cx=\"35%\" cy=\"32%\" r=\"70%\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".9\"/><stop offset=\".25\" stop-color=\"#C9F5F1\"/><stop offset=\"1\" stop-color=\"#3FAFA6\"/></radialGradient></defs><circle cx=\"12\" cy=\"12\" r=\"7\" fill=\"url(#pg-uranus)\"/></svg>", "Neptune": "<svg class=\"planet\" viewBox=\"0 0 24 24\" aria-label=\"Neptune\"><defs><radialGradient id=\"pg-neptune\" cx=\"35%\" cy=\"32%\" r=\"70%\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".9\"/><stop offset=\".25\" stop-color=\"#A9C5FA\"/><stop offset=\"1\" stop-color=\"#2F4FB3\"/></radialGradient></defs><circle cx=\"12\" cy=\"12\" r=\"7\" fill=\"url(#pg-neptune)\"/></svg>", "Pluto": "<svg class=\"planet\" viewBox=\"0 0 24 24\" aria-label=\"Pluto\"><defs><radialGradient id=\"pg-pluto\" cx=\"35%\" cy=\"32%\" r=\"70%\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".9\"/><stop offset=\".25\" stop-color=\"#D7B6E6\"/><stop offset=\"1\" stop-color=\"#5B3A73\"/></radialGradient></defs><circle cx=\"12\" cy=\"12\" r=\"7\" fill=\"url(#pg-pluto)\"/></svg>"};
 const EVENTS = {
  "2027-01-07": [
   {
@@ -354,6 +357,7 @@ const EVENTS = {
    "label": "Mars turns retrograde in Virgo",
    "desc": "Mars, the planet of drive, turns back for the first time since 2024 and stays retrograde until 1 April. Energy goes inward. Finish what you started instead of launching new battles.",
    "utc": "2027-01-10T12:59:00Z",
+   "planet": "Mars",
    "cls": "tag-aspect"
   }
  ],
@@ -364,6 +368,7 @@ const EVENTS = {
    "label": "Aquarius season begins",
    "desc": "The Sun enters Aquarius. For the next month the focus turns to friendship, community, the future and freedom. Happy birthday, Aquarius.",
    "utc": "2027-01-20T07:29:00Z",
+   "planet": "Sun",
    "cls": "tag-ingress"
   }
  ],
@@ -393,6 +398,7 @@ const EVENTS = {
    "label": "Uranus turns direct in Gemini",
    "desc": "Uranus moves forward again. Expect fresh momentum around change and new ideas.",
    "utc": "2027-02-08T12:29:00Z",
+   "planet": "Uranus",
    "cls": "tag-uranus"
   }
  ],
@@ -403,6 +409,7 @@ const EVENTS = {
    "label": "Mercury turns retrograde in Pisces",
    "desc": "Mercury slows down: messages, travel plans and technology need a second look. Good for revising, rereading and reconnecting. Sign contracts with extra care. Retrograde until 3 March.",
    "utc": "2027-02-09T17:36:00Z",
+   "planet": "Mercury",
    "cls": "tag-mercury"
   }
  ],
@@ -413,6 +420,7 @@ const EVENTS = {
    "label": "Pisces season begins",
    "desc": "The Sun enters Pisces. For the next month the focus turns to rest, dreams, intuition and compassion. Happy birthday, Pisces.",
    "utc": "2027-02-18T21:33:00Z",
+   "planet": "Sun",
    "cls": "tag-ingress"
   }
  ],
@@ -433,6 +441,7 @@ const EVENTS = {
    "label": "Mars enters Leo",
    "desc": "Mars, the planet of energy and action, moves into Leo while retrograde, revisiting unfinished business. Your drive turns toward creativity, joy, romance and being seen.",
    "utc": "2027-02-21T14:13:00Z",
+   "planet": "Mars",
    "cls": "tag-ingress"
   }
  ],
@@ -443,6 +452,7 @@ const EVENTS = {
    "label": "Mercury turns direct in Aquarius",
    "desc": "Mercury moves forward again. Plans, talks and travel pick up speed. Give it a few days before big decisions.",
    "utc": "2027-03-03T12:32:00Z",
+   "planet": "Mercury",
    "cls": "tag-mercury"
   }
  ],
@@ -462,6 +472,7 @@ const EVENTS = {
    "label": "March equinox",
    "desc": "Day and night are equal. Spring begins in the north and the astrological year starts again with Aries.",
    "utc": "2027-03-20T20:24:00Z",
+   "planet": "Sun",
    "cls": "tag-season"
   }
  ],
@@ -481,6 +492,7 @@ const EVENTS = {
    "label": "Mars turns direct in Leo",
    "desc": "Mars moves forward again after nearly three months. Energy returns: the projects that stalled since January can move.",
    "utc": "2027-04-01T14:08:00Z",
+   "planet": "Mars",
    "cls": "tag-aspect"
   }
  ],
@@ -500,6 +512,7 @@ const EVENTS = {
    "label": "Jupiter turns direct in Leo",
    "desc": "Jupiter moves forward again. Growth, opportunities and good news start flowing outward.",
    "utc": "2027-04-13T02:11:00Z",
+   "planet": "Jupiter",
    "cls": "tag-jupiter"
   }
  ],
@@ -510,6 +523,7 @@ const EVENTS = {
    "label": "Taurus season begins",
    "desc": "The Sun enters Taurus. For the next month the focus turns to money, comfort, your body and what you truly value. Happy birthday, Taurus.",
    "utc": "2027-04-20T07:17:00Z",
+   "planet": "Sun",
    "cls": "tag-ingress"
   },
   {
@@ -536,6 +550,7 @@ const EVENTS = {
    "label": "Pluto turns retrograde in Aquarius",
    "desc": "Pluto, the planet of deep transformation, turns back. A long, quiet season of letting go of what no longer has power over you. Retrograde until 18 October.",
    "utc": "2027-05-08T12:56:00Z",
+   "planet": "Pluto",
    "cls": "tag-pluto"
   }
  ],
@@ -546,6 +561,7 @@ const EVENTS = {
    "label": "Mars enters Virgo",
    "desc": "Mars, the planet of energy and action, moves into Virgo. Your drive turns toward health, daily routines and useful work.",
    "utc": "2027-05-14T14:47:00Z",
+   "planet": "Mars",
    "cls": "tag-ingress"
   }
  ],
@@ -565,6 +581,7 @@ const EVENTS = {
    "label": "Gemini season begins",
    "desc": "The Sun enters Gemini. For the next month the focus turns to conversations, learning, writing and new ideas. Happy birthday, Gemini.",
    "utc": "2027-05-21T06:18:00Z",
+   "planet": "Sun",
    "cls": "tag-ingress"
   }
  ],
@@ -584,6 +601,7 @@ const EVENTS = {
    "label": "Mercury turns retrograde in Cancer",
    "desc": "Mercury slows down: messages, travel plans and technology need a second look. Good for revising, rereading and reconnecting. Sign contracts with extra care. Retrograde until 4 July.",
    "utc": "2027-06-10T18:15:00Z",
+   "planet": "Mercury",
    "cls": "tag-mercury"
   }
  ],
@@ -603,6 +621,7 @@ const EVENTS = {
    "label": "June solstice",
    "desc": "The longest day of the year in the north. A moment to celebrate how far you have come.",
    "utc": "2027-06-21T14:10:00Z",
+   "planet": "Sun",
    "cls": "tag-season"
   }
  ],
@@ -620,6 +639,7 @@ const EVENTS = {
    "label": "Mercury turns direct in Gemini",
    "desc": "Mercury moves forward again. Plans, talks and travel pick up speed. Give it a few days before big decisions.",
    "utc": "2027-07-04T19:39:00Z",
+   "planet": "Mercury",
    "cls": "tag-mercury"
   }
  ],
@@ -630,6 +650,7 @@ const EVENTS = {
    "label": "Neptune turns retrograde in Aries",
    "desc": "Neptune, the planet of dreams and intuition, turns back. Illusions fade, and what is real becomes easier to see. Retrograde until 15 December.",
    "utc": "2027-07-09T22:41:00Z",
+   "planet": "Neptune",
    "cls": "tag-neptune"
   }
  ],
@@ -640,6 +661,7 @@ const EVENTS = {
    "label": "Mars enters Libra",
    "desc": "Mars, the planet of energy and action, moves into Libra. Your drive turns toward relationships, agreements, balance and beauty.",
    "utc": "2027-07-15T05:40:00Z",
+   "planet": "Mars",
    "cls": "tag-ingress"
   }
  ],
@@ -660,6 +682,7 @@ const EVENTS = {
    "label": "Leo season begins",
    "desc": "The Sun enters Leo. For the next month the focus turns to creativity, joy, romance and being seen. Happy birthday, Leo.",
    "utc": "2027-07-23T01:04:00Z",
+   "planet": "Sun",
    "cls": "tag-ingress"
   }
  ],
@@ -670,6 +693,7 @@ const EVENTS = {
    "label": "Jupiter enters Virgo",
    "desc": "Jupiter, the planet of growth and luck, moves into Virgo for about a year. Opportunities grow through good work, healthy habits and being useful. It last visited Virgo in 2015.",
    "utc": "2027-07-26T04:49:00Z",
+   "planet": "Jupiter",
    "cls": "tag-ingress"
   }
  ],
@@ -690,6 +714,7 @@ const EVENTS = {
    "label": "Saturn turns retrograde in Aries",
    "desc": "Saturn, the planet of structure and responsibility, turns back. A season for checking your foundations and finishing old commitments. Retrograde until 24 December.",
    "utc": "2027-08-09T18:06:00Z",
+   "planet": "Saturn",
    "cls": "tag-saturn"
   }
  ],
@@ -710,6 +735,7 @@ const EVENTS = {
    "label": "Virgo season begins",
    "desc": "The Sun enters Virgo. For the next month the focus turns to health, daily routines and useful work. Happy birthday, Virgo.",
    "utc": "2027-08-23T08:14:00Z",
+   "planet": "Sun",
    "cls": "tag-ingress"
   }
  ],
@@ -729,6 +755,7 @@ const EVENTS = {
    "label": "Mars enters Scorpio",
    "desc": "Mars, the planet of energy and action, moves into Scorpio. Your drive turns toward intimacy, shared money, letting go and inner power.",
    "utc": "2027-09-02T01:52:00Z",
+   "planet": "Mars",
    "cls": "tag-ingress"
   }
  ],
@@ -739,6 +766,7 @@ const EVENTS = {
    "label": "Uranus turns retrograde in Gemini",
    "desc": "Uranus, the planet of sudden change, turns back. Changes that started earlier get tested and settled. Retrograde until 12 February 2028.",
    "utc": "2027-09-15T09:09:00Z",
+   "planet": "Uranus",
    "cls": "tag-uranus"
   },
   {
@@ -756,6 +784,7 @@ const EVENTS = {
    "label": "September equinox",
    "desc": "Day and night are equal again. A moment of balance before the darker half of the year.",
    "utc": "2027-09-23T06:01:00Z",
+   "planet": "Sun",
    "cls": "tag-season"
   }
  ],
@@ -775,6 +804,7 @@ const EVENTS = {
    "label": "Mercury turns retrograde in Scorpio",
    "desc": "Mercury slows down: messages, travel plans and technology need a second look. Good for revising, rereading and reconnecting. Sign contracts with extra care. Retrograde until 28 October.",
    "utc": "2027-10-07T14:37:00Z",
+   "planet": "Mercury",
    "cls": "tag-mercury"
   }
  ],
@@ -792,6 +822,7 @@ const EVENTS = {
    "label": "Mars enters Sagittarius",
    "desc": "Mars, the planet of energy and action, moves into Sagittarius. Your drive turns toward travel, study, faith and the bigger picture.",
    "utc": "2027-10-15T23:13:00Z",
+   "planet": "Mars",
    "cls": "tag-ingress"
   }
  ],
@@ -802,6 +833,7 @@ const EVENTS = {
    "label": "Pluto turns direct in Aquarius",
    "desc": "Pluto moves forward again. The inner work of the past months starts to show on the outside.",
    "utc": "2027-10-18T03:50:00Z",
+   "planet": "Pluto",
    "cls": "tag-pluto"
   }
  ],
@@ -812,6 +844,7 @@ const EVENTS = {
    "label": "Scorpio season begins",
    "desc": "The Sun enters Scorpio. For the next month the focus turns to intimacy, shared money, letting go and inner power. Happy birthday, Scorpio.",
    "utc": "2027-10-23T15:32:00Z",
+   "planet": "Sun",
    "cls": "tag-ingress"
   }
  ],
@@ -822,6 +855,7 @@ const EVENTS = {
    "label": "Mercury turns direct in Libra",
    "desc": "Mercury moves forward again. Plans, talks and travel pick up speed. Give it a few days before big decisions.",
    "utc": "2027-10-28T14:10:00Z",
+   "planet": "Mercury",
    "cls": "tag-mercury"
   }
  ],
@@ -850,6 +884,7 @@ const EVENTS = {
    "label": "Sagittarius season begins",
    "desc": "The Sun enters Sagittarius. For the next month the focus turns to travel, study, faith and the bigger picture. Happy birthday, Sagittarius.",
    "utc": "2027-11-22T13:16:00Z",
+   "planet": "Sun",
    "cls": "tag-ingress"
   }
  ],
@@ -860,6 +895,7 @@ const EVENTS = {
    "label": "Mars enters Capricorn",
    "desc": "Mars, the planet of energy and action, moves into Capricorn. Your drive turns toward career, ambition and building for the long term.",
    "utc": "2027-11-25T18:38:00Z",
+   "planet": "Mars",
    "cls": "tag-ingress"
   }
  ],
@@ -888,6 +924,7 @@ const EVENTS = {
    "label": "Neptune turns direct in Aries",
    "desc": "Neptune moves forward again. Dreams and creative projects find clearer direction.",
    "utc": "2027-12-15T09:07:00Z",
+   "planet": "Neptune",
    "cls": "tag-neptune"
   }
  ],
@@ -898,6 +935,7 @@ const EVENTS = {
    "label": "December solstice",
    "desc": "The longest night of the year in the north. From here the light returns.",
    "utc": "2027-12-22T02:42:00Z",
+   "planet": "Sun",
    "cls": "tag-season"
   }
  ],
@@ -908,6 +946,7 @@ const EVENTS = {
    "label": "Saturn turns direct in Aries",
    "desc": "Saturn moves forward again. Plans you have tested can now be built properly.",
    "utc": "2027-12-24T02:46:00Z",
+   "planet": "Saturn",
    "cls": "tag-saturn"
   }
  ],
@@ -928,61 +967,61 @@ const RETROGRADES = [
   "planet": "Uranus ♅︎",
   "start": "2027-09-10",
   "end": "2027-02-08",
-  "color": "#5FC0A4"
+  "color": "#4FC0B6"
  },
  {
   "planet": "Jupiter ♃︎",
   "start": "2027-12-13",
   "end": "2027-04-13",
-  "color": "#E8B54A"
+  "color": "#D9A066"
  },
  {
   "planet": "Mars ♂︎",
   "start": "2027-01-10",
   "end": "2027-04-01",
-  "color": "#E07A7A"
+  "color": "#D2553A"
  },
  {
   "planet": "Mercury ☿︎",
   "start": "2027-02-09",
   "end": "2027-03-03",
-  "color": "#EFA97A"
+  "color": "#A8927F"
  },
  {
   "planet": "Pluto ♇︎",
   "start": "2027-05-08",
   "end": "2027-10-18",
-  "color": "#A98BD9"
+  "color": "#7B529A"
  },
  {
   "planet": "Mercury ☿︎",
   "start": "2027-06-10",
   "end": "2027-07-04",
-  "color": "#EFA97A"
+  "color": "#A8927F"
  },
  {
   "planet": "Neptune ♆︎",
   "start": "2027-07-09",
   "end": "2027-12-15",
-  "color": "#8C9BE0"
+  "color": "#4A6BD0"
  },
  {
   "planet": "Saturn ♄︎",
   "start": "2027-08-09",
   "end": "2027-12-24",
-  "color": "#6FA8D9"
+  "color": "#C9AE6A"
  },
  {
   "planet": "Uranus ♅︎",
   "start": "2027-09-15",
   "end": "2028-02-12",
-  "color": "#5FC0A4"
+  "color": "#4FC0B6"
  },
  {
   "planet": "Mercury ☿︎",
   "start": "2027-10-07",
   "end": "2027-10-28",
-  "color": "#EFA97A"
+  "color": "#A8927F"
  }
 ];
 
@@ -1084,7 +1123,7 @@ function render() {
         ev.type === 'season'  ? 'tag-season'  : 'tag-aspect'
       );
       tag.className = `event-tag ${cls}`;
-      tag.textContent = ev.label.split(',')[0].trim().split('(')[0].trim().substring(0,22);
+      tag.innerHTML = (ev.planet && PLANETS[ev.planet] ? `<span class="pl-sm">${PLANETS[ev.planet]}</span>` : '') + ev.label.split(',')[0].trim().split('(')[0].trim().substring(0,22);
       cell.appendChild(tag);
     });
 
@@ -1122,7 +1161,7 @@ function showDetail(key, d, month) {
     const color = borderColors[ev.type] || '#6677ff';
     html += `
       <div class="detail-event" style="border-left-color:${color}">
-        <div class="icon">${ev.icon}</div>
+        <div class="icon">${ev.planet && PLANETS[ev.planet] ? `<span class="pl-lg">${PLANETS[ev.planet]}</span>` : ev.icon}</div>
         <div class="info">
           <h4>${ev.label}</h4>${ev.utc ? `<p class="ev-time">${new Date(ev.utc).toLocaleString([], {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})} your time</p>` : ''}
           <p>${ev.desc}</p>
